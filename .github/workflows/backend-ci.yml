@@ -1,0 +1,34 @@
+# Nome do workflow
+name: Backend CI
+
+# Define o gatilho: este workflow rodará a cada push ou pull request na branch 'master'
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# Define os "trabalhos" que o workflow executará
+jobs:
+  # Primeiro trabalho chama-se 'check-backend'
+  check-backend:
+    # Ele rodará em uma máquina virtual do Ubuntu, a mais recente disponível
+    runs-on: ubuntu-latest
+
+    # Define os passos que o trabalho executará em sequência
+    steps:
+      # 1. Clona o repositório para dentro da máquina virtual
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Configura o ambiente Node.js na versão 18
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 3. Instala as dependências do backend de forma otimizada para CI
+      - name: Install backend dependencies
+        # O comando é executado dentro da pasta do backend
+        run: npm ci
+        working-directory: ./backend
